@@ -7,32 +7,28 @@ import org.apache.spark.sql._
   * Created by yanghaihui on 10/29/16.
   */
 object ConnectCassandra {
+
   def main(args: Array[String]): Unit = {
-    //    ConnectCassandra.readData()
+    ConnectCassandra.readData()
     ConnectCassandra.saveData()
   }
 
+  //Configuration for a Spark application.
+  val conf = new SparkConf()
+    .setAppName("connection cassandra db example.")
+    .setMaster("local[2]")
 
+  //out main function, variable is global variable.
+  val sc = new SparkContext(conf)
+
+  val spark = SparkSession
+    .builder()
+    .getOrCreate()
+
+  //Unit is same as java type void.
+  //use global config.
   def readData(): Unit = {
     println("cassandra example: ")
-
-    SparkContext
-    val spark = SparkSession
-      .builder()
-      .appName("connect cassandra example")
-      //    .config("spark.some.config.option", "some-value")
-      //    .config("spark.cassandra.connection.host", "localhost")
-      .master("local[2]")
-      .appName("cassandraTest")
-      .getOrCreate()
-
-
-    //    val load: DataFrame = spark.read.format("org.apache.spark.sql.cassandra")
-    //      .option("spark.some.config.option", "some-value")
-    //      .option("spark.cassandra.connection.host", "localhost")
-    //      .option("table", "idx_weight")
-    //      .option("keyspace", "gta")
-    //      .load()
 
     val load: DataFrame = spark.read.format("org.apache.spark.sql.cassandra")
       .options(Map(
@@ -42,6 +38,14 @@ object ConnectCassandra {
         "spark.cleaner.ttl" -> "3600",
         "keyspace" -> "test"
       )).load()
+
+    //also can write this.
+    //    val load: DataFrame = spark.read.format("org.apache.spark.sql.cassandra")
+    //      .option("spark.some.config.option", "some-value")
+    //      .option("spark.cassandra.connection.host", "localhost")
+    //      .option("table", "idx_weight")
+    //      .option("keyspace", "gta")
+    //      .load()
 
     load.createOrReplaceTempView("words")
 
@@ -55,7 +59,6 @@ object ConnectCassandra {
       case Row(key: String, value: Int) => s"Key: $key, Value: $value"
     }).show(10)
 
-
     sqlDF1.show(20)
     println("get data from cassandra db.")
 
@@ -65,27 +68,26 @@ object ConnectCassandra {
     import com.datastax.spark.connector._
     //Loads implicit functions
 
+    sc.stop() // note: only one sparkContext exists!!!
+
     val conf = new SparkConf()
-    conf.set("spark.cassandra.connection.host", "localhost")
-    conf.setMaster("local[2]")
-    conf.set("table", "words")
-    conf.set("keyspace", "test")
-    conf.setAppName("test2")
+      //          .set("spark.driver.allowMultipleContexts", "true") how to set this?
+      .setMaster("local[2]")
+      .setAppName("test2")
+      .set("spark.cassandra.connection.host", "localhost")
+    val sc2 = new SparkContext(conf)
 
-    val sc = new SparkContext(conf)
-
-    val collection = sc.parallelize(Seq(("cat", 30), ("dog", 20), ("fish", 10)))
+    val collection = sc2.parallelize(Seq(("cat", 30), ("dog", 20), ("fish", 10)))
     collection.saveToCassandra("test", "words", SomeColumns("word", "count"))
 
-
-    val collection1 = sc.parallelize(Seq(WordCount("aaa", 2), WordCount("bbb", 3)))
+    val collection1 = sc2.parallelize(Seq(WordCount("aaa", 2), WordCount("bbb", 3)))
     collection1.saveToCassandra("test", "words", SomeColumns("word", "count"))
 
-    val results = sc.cassandraTable[(String, Int)]("test", "words").collect()
+    val results = sc2.cassandraTable[(String, Int)]("test", "words").collect()
     results.foreach(println)
-
   }
 
+  //  sc.stop()
   case class WordCount(word: String, count: Int)
 
 }
