@@ -3,10 +3,6 @@
     /Users/yanghaihui/IdeaProjects/sparkTest/target/sparkTest-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 
-
-
-
-
 sql example:
 Exception in thread "main" java.sql.SQLException: No suitable driver
 	at java.sql.DriverManager.getDriver(DriverManager.java:315)
@@ -37,3 +33,12 @@ Exception in thread "main" java.sql.SQLException: No suitable driver
 
 sql example:
 Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+
+
+Only one SparkContext may be running in this JVM (see SPARK-2243). To ignore this error, set spark.driver.allowMultipleContexts = true.
+
+
+SparkContext:
+    Main entry point for Spark functionality. A SparkContext represents the connection to a Spark cluster, and can be used to create RDDs, accumulators and broadcast variables on that cluster.
+
+    Only one SparkContext may be active per JVM. You must stop() the active SparkContext before creating a new one. This limitation may eventually be removed;
