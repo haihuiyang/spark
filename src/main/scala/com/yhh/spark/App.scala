@@ -60,9 +60,9 @@ object App {
     import org.apache.spark.sql.expressions.Window
     import org.apache.spark.sql.functions._
 
-    val wSpec = Window.partitionBy("symbol").orderBy("tradingDate").rowsBetween(Long.MinValue, 1)
+    val wSpec = Window.partitionBy("symbol").orderBy("tradingDate").rowsBetween(0, 1)
 
-    sqlDF1.withColumn("avg", sum(sqlDF1("WEIGHT")).over(wSpec)).show()
+    sqlDF1.withColumn("rate_of_return", last(sqlDF1("WEIGHT").over(wSpec)) divide (first(sqlDF1("WEIGHT").over(wSpec))) + 1).show(20)
 
 
     println("get data from cassandra db.")

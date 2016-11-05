@@ -1,6 +1,6 @@
 /Users/yanghaihui/tools/spark-2.0.1-bin-hadoop2.7/bin/spark-submit --class com.yhh.spark.App \
     --master local \
-    /Users/yanghaihui/IdeaProjects/sparkTest/target/sparkTest-1.0-SNAPSHOT-jar-with-dependencies.jar
+    /Users/yanghaihui/project/github/code/spark/target/sparkTest-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 
 sql example:
