@@ -51,15 +51,39 @@ object UsefulOperator extends MySparkConf {
     // firstRow: com.datastax.spark.connector.rdd.reader.CassandraRow = CassandraRow{word: bar, count: 20}
 
     // firstRow.columnNames // Stream(word, count)
-    firstRow.size           // 2
+    firstRow.size // 2
 
-    firstRow.getInt("count")       // 20
-    firstRow.getLong("count")      // 20L
+    firstRow.getInt("count") // 20
+    firstRow.getLong("count") // 20L
 
-    firstRow.get[Int]("count")                   // 20
-    firstRow.get[Long]("count")                  // 20L
-    firstRow.get[BigInt]("count")                // BigInt(20)
-    firstRow.get[java.math.BigInteger]("count")  // BigInteger(20)
+    firstRow.get[Int]("count") // 20
+    firstRow.get[Long]("count") // 20L
+    firstRow.get[BigInt]("count") // BigInt(20)
+    firstRow.get[java.math.BigInteger]("count") // BigInteger(20)
+
+    firstRow.getIntOption("count") // Some(20)
+    firstRow.get[Option[Int]]("count") // Some(20)
+
+
+    val row = sc.cassandraTable("test", "users").first
+    // row: com.datastax.spark.connector.rdd.reader.CassandraRow = CassandraRow{username: someone, emails: [someone@email.com, s@email.com]}
+
+    row.getList[String]("emails") // Vector(someone@email.com, s@email.com)
+    row.get[List[String]]("emails") // List(someone@email.com, s@email.com)
+    row.get[Seq[String]]("emails") // List(someone@email.com, s@email.com)   :Seq[String]
+    row.get[IndexedSeq[String]]("emails") // Vector(someone@email.com, s@email.com) :IndexedSeq[String]
+    row.get[Set[String]]("emails") // Set(someone@email.com, s@email.com)
+
+    row.get[String]("emails") // "[someone@email.com, s@email.com]"
+
+    //    CREATE TYPE test.address (city text, street text, number int);
+    //    CREATE TABLE test.companies (name text PRIMARY KEY, address FROZEN<address>);
+
+    val address: UDTValue = row.getUDTValue("address")
+    val city = address.getString("city")
+    val street = address.getString("street")
+    val number = address.getInt("number")
+
 
     // rdd: com.datastax.spark.connector.rdd.CassandraRDD[com.datastax.spark.connector.rdd.reader.CassandraRow] = CassandraRDD[0] at RDD at CassandraRDD.scala:41
 
