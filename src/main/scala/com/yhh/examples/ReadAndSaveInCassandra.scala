@@ -1,6 +1,5 @@
 package com.yhh.examples
 
-import com.yhh.utils.DefaultSparkConf
 import org.apache.spark.sql._
 import org.apache.spark.{SparkConf, SparkContext}
 import org.slf4j.LoggerFactory
@@ -8,11 +7,11 @@ import org.slf4j.LoggerFactory
 /**
   * Created by yanghaihui on 10/29/16.
   */
-object ReadAndSaveInCassandra extends DefaultSparkConf {
+class ReadAndSaveInCassandra {
 
-  val log = LoggerFactory.getLogger(ReadAndSaveInCassandra.getClass)
+  val log = LoggerFactory.getLogger(classOf[ReadAndSaveInCassandra])
 
-  def readData(): Unit = {
+  def readData(spark: SparkSession, sc: SparkContext): Unit = {
 
     log.debug("Begin to read data from cassandra.")
 
@@ -33,7 +32,7 @@ object ReadAndSaveInCassandra extends DefaultSparkConf {
 
   }
 
-  def saveData(): Unit = {
+  def saveData(spark: SparkSession, sc: SparkContext): Unit = {
     import com.datastax.spark.connector._
 
     // note: only one sparkContext exists!!!
@@ -56,4 +55,5 @@ object ReadAndSaveInCassandra extends DefaultSparkConf {
   }
 
   case class WordCount(word: String, count: Int)
+
 }

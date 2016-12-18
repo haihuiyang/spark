@@ -1,16 +1,19 @@
 package com.yhh.examples
 
-import com.yhh.utils.DefaultSparkConf
-import org.apache.spark.sql.SaveMode
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.{SaveMode, SparkSession}
+import org.slf4j.LoggerFactory
 
 /**
   * Created by yanghaihui on 12/16/16.
   */
-object ReadAndWriteFromDifferentHost extends DefaultSparkConf {
+class ReadAndWriteFromDifferentHost {
+
+  val log = LoggerFactory.getLogger(classOf[ReadAndWriteFromDifferentHost])
 
   //Assuming that ks1.tb1's schema equals ks2.tb2's;
   //If not, you should make some conversions.
-  def Cassandra1ToCassandra2(): Unit = {
+  def Cassandra1ToCassandra2(spark: SparkSession, sc: SparkContext): Unit = {
     spark.read.format("org.apache.spark.sql.cassandra")
       .options(Map(
         "spark.cassandra.connection.host" -> "host1",
@@ -31,7 +34,7 @@ object ReadAndWriteFromDifferentHost extends DefaultSparkConf {
 
   //Assuming that database.table's schema equals ks1.tb1's;
   //If not, you should make some conversions.
-  def MysqlToCassandra(): Unit = {
+  def MysqlToCassandra(spark: SparkSession, sc: SparkContext): Unit = {
     val mysqlDF = spark.read.format("jdbc")
       .options(Map(
         "driver" -> "com.mysql.jdbc.Driver",

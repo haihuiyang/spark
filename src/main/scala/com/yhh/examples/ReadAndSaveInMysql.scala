@@ -1,20 +1,18 @@
 package com.yhh.examples
 
-import com.yhh.utils.DefaultSparkConf
-import org.apache.spark.sql.SaveMode
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.slf4j.LoggerFactory
 
 /**
   * Created by yanghaihui on 10/29/16.
   */
-object ReadAndSaveInMysql extends DefaultSparkConf {
+class ReadAndSaveInMysql {
 
-  val log = LoggerFactory.getLogger(ReadAndSaveInMysql.getClass)
+  val log = LoggerFactory.getLogger(classOf[ReadAndSaveInMysql])
 
-  def connectMysql(): Unit = {
+  def connectMysql(spark: SparkSession, sc: SparkContext): Unit = {
     log.debug("Begin connect mysql.")
-
-    import spark.sql
 
     val mysqlDF = spark.read.format("jdbc")
       .options(Map(
@@ -28,7 +26,7 @@ object ReadAndSaveInMysql extends DefaultSparkConf {
     //create a temp view for sql selection.
     mysqlDF.createOrReplaceTempView("test")
 
-    val sqlDF2 = sql("select * from test")
+    val sqlDF2 = spark.sql("select * from test")
 
     sqlDF2.show(20)
 
