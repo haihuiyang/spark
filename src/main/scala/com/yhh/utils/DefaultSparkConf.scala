@@ -14,8 +14,9 @@ trait DefaultSparkConf {
     .set("spark.cassandra.connection.host", "localhost")
 
   /*
-  SparkContext是开发Spark应用的入口，它负责和整个集群的交互，包括创建RDD，accumulators and broadcast variables。
-  Spark默认的构造函数接受org.apache.spark.SparkConf， 通过这个参数我们可以自定义本次提交的参数，这个参数会覆盖系统的默认配置。
+  The first thing a Spark program must do is to create a SparkContext object, which tells Spark how to access a cluster.
+  To create a SparkContext you first need to build a SparkConf object that contains information about your application.
+  Only one SparkContext may be active per JVM. You must stop() the active SparkContext before creating a new one.
    */
   val sc = new SparkContext(conf)
 
