@@ -1,3 +1,4 @@
+submit a jar file:
 /Users/yanghaihui/tools/spark-2.0.1-bin-hadoop2.7/bin/spark-submit --class com.yhh.spark.App \
     --master local \
     /Users/yanghaihui/project/github/code/spark/target/sparkTest-1.0-SNAPSHOT-jar-with-dependencies.jar
@@ -28,7 +29,7 @@ Exception in thread "main" java.sql.SQLException: No suitable driver
 	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:124)
 	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
 
-加了这个之后
+after adding this:
 .option("driver", "com.mysql.jdbc.Driver")
 
 sql example:
@@ -42,3 +43,33 @@ SparkContext:
     Main entry point for Spark functionality. A SparkContext represents the connection to a Spark cluster, and can be used to create RDDs, accumulators and broadcast variables on that cluster.
 
     Only one SparkContext may be active per JVM. You must stop() the active SparkContext before creating a new one. This limitation may eventually be removed;
+
+
+
+
+
+
+
+register a func:
+
+val df_without_na = df.na.drop.withColumn("col1", expr("col_name1"))
+
+spark.udf.register("divide", (num1: Double, num2: Double) => (if(num2 != 0) num1/num2 else Double.NAN))
+val df_joined = spark.sql("select col1, col2, divide(col3, col4) as col3 from test")
+
+collect a list:
+
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions._
+
+val wSpec = Window.partitionBy("symbol").orderBy("tradingDate").rowsBetween(-13, 0)
+val df_with_list = df.withColumn("col1_list", collect_list(df("col1")).over(wSpec))
+
+
+import scala.collection.mutable.WrappedArray
+
+spark.udf.register("calculate_list", (valueList: WrappedArray[Double]) => {
+    val a = valueList.filter(x => x >0).sum
+    val b = -1 * valueList.filter(x => x <0).sum
+    a + b
+})
