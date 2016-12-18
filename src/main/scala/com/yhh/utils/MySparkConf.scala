@@ -9,7 +9,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 abstract class MySparkConf {
 
   val conf = new SparkConf()
-    .setAppName("connection cassandra db example.")
+    .setAppName("Spark test example.")
     .setMaster("local")
     .set("spark.cassandra.connection.host","localhost")
 
