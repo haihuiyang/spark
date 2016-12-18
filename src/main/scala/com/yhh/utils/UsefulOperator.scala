@@ -3,7 +3,7 @@ package com.yhh.utils
 /**
   * Created by yanghaihui on 11/5/16.
   */
-object UsefulOperator extends MySparkConf {
+object UsefulOperator extends DefaultSparkConf {
 
   def main(args: Array[String]): Unit = {
     println("here is some useful operator in spark and scala.")

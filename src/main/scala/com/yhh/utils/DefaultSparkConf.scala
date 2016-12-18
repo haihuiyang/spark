@@ -6,12 +6,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by yanghaihui on 11/5/16.
   */
-abstract class MySparkConf {
+trait DefaultSparkConf {
 
   val conf = new SparkConf()
     .setAppName("Spark test example.")
     .setMaster("local")
-    .set("spark.cassandra.connection.host","localhost")
+    .set("spark.cassandra.connection.host", "localhost")
 
   val sc = new SparkContext(conf)
 
