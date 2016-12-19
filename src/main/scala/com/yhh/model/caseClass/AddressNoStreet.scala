@@ -1,4 +1,4 @@
-package com.yhh.model
+package com.yhh.model.caseClass
 
 /**
   * Created by yanghaihui on 12/18/16.

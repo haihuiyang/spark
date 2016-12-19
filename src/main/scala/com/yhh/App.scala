@@ -1,4 +1,4 @@
-package com.yhh.spark
+package com.yhh
 
 import com.yhh.examples.WindowFunc
 import com.yhh.utils.DefaultSparkConf

@@ -3,7 +3,7 @@ package com.yhh.examples
 import java.util.UUID
 
 import com.datastax.spark.connector.UDTValue
-import com.yhh.model.PeopleAddressUseUDTValue
+import com.yhh.model.caseClass.PeopleAddressUseUDTValue
 import org.apache.spark.SparkContext
 
 import scala.collection.mutable.ListBuffer

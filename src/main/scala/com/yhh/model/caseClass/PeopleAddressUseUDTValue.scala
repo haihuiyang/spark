@@ -1,4 +1,4 @@
-package com.yhh.model
+package com.yhh.model.caseClass
 
 import java.util.UUID
 
