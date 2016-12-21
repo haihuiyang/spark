@@ -3,7 +3,6 @@ package com.yhh.examples
 import java.util.UUID
 
 import com.datastax.spark.connector.UDTValue
-import com.yhh.model.PeopleAddressUseCaseClass
 import com.yhh.model.caseClass.{AddressNoStreet, PeopleAddressUseCaseClass}
 import org.apache.spark.SparkContext
 
